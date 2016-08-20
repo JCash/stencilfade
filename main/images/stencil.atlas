@@ -1,0 +1,15 @@
+images {
+  image: "/main/images/stencil_diagonal.png"
+}
+images {
+  image: "/main/images/stencil_circle.png"
+}
+images {
+  image: "/main/images/stencil_circle_2.png"
+}
+images {
+  image: "/main/images/stencil_stripe_diagonal.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

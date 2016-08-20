@@ -1,0 +1,69 @@
+local FADE_TIME = 1
+local FADE_IN_OFFSET = 1
+local FADE_OUT_OFFSET = 0
+
+go.property("offset", 1)
+
+function init(self)
+    self.names = { "diagonal", "circle", "circle_2", "stripe_diagonal" }
+    self.index = 1
+    self.name = nil
+    self.component_name = nil
+    self.texture_name = nil
+    
+    set_stencil(self, self.index)
+end
+
+function set_stencil(self, index)
+    for i, v in ipairs(self.names) do
+        sprite.set_constant(self.component_name, "offset", vmath.vector4(0, 1, 1, 1))
+    end
+    
+    self.index = (index - 1) % #self.names + 1
+    self.name = self.names[self.index]
+    self.component_name = "#" .. self.name
+    self.texture_name = "stencil_" .. self.name
+
+    sprite.set_constant(self.component_name, "offset", vmath.vector4(self.offset, 1, 1, 1))
+
+    --[[
+    if self.index == 4 then
+        msg.post("@system:", "start_record", { file_name = "/Users/mawe/defold_rec.ivf" } )
+        print("RECORDING")
+    end
+    --]]
+end
+
+function update(self, dt)
+    sprite.set_constant(self.component_name, "offset", vmath.vector4(self.offset, 1, 1, 1))
+end
+
+function done(self, url, property)
+    --[[if self.index == 4 and self.offset == 1 then
+	    msg.post("@system:", "stop_record")
+	    print("STOPPED RECORDING")
+	end
+	--]]
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("fade_out") then -- hide the game
+        if self.offset == FADE_IN_OFFSET then
+            go.animate("#", "offset", go.PLAYBACK_ONCE_FORWARD, FADE_OUT_OFFSET, go.EASING_LINEAR, FADE_TIME, 0, done)
+        end
+        
+    elseif message_id == hash("fade_in") then -- show the game
+        if self.offset == FADE_OUT_OFFSET then
+            go.animate("#", "offset", go.PLAYBACK_ONCE_FORWARD, FADE_IN_OFFSET, go.EASING_LINEAR, FADE_TIME, 0, done)
+        end
+        
+    elseif message_id == hash("next_texture") then
+        set_stencil(self, self.index + 1)
+        msg.post(sender, "texture_name", {texture=self.texture_name})
+        
+    elseif message_id == hash("prev_texture") then
+        set_stencil(self, self.index - 1)
+        msg.post(sender, "texture_name", {texture=self.texture_name})
+        
+    end
+end

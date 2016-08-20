@@ -1,0 +1,4 @@
+mesh: "/main/assets/quad.dae"
+material: "/main/render/screenfade.material"
+textures: ""
+name: "quad"

@@ -1,0 +1,26 @@
+function init(self)
+    msg.post(".", "acquire_input_focus", {})
+    self.node = gui.get_node("texture")
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("texture_name")then
+        gui.play_flipbook(self.node, message.texture)
+    end
+end
+
+function on_input(self, action_id, action)
+    if action_id == hash("key_left") and action.pressed then
+        msg.post("screenfade", "prev_texture")
+
+    elseif action_id == hash("key_right") and action.pressed then
+        msg.post("screenfade", "next_texture")
+
+    elseif action_id == hash("key_down") and action.pressed then
+        msg.post("screenfade", "fade_out")
+        
+    elseif action_id == hash("key_up") and action.pressed then
+        msg.post("screenfade", "fade_in")
+        
+    end
+end

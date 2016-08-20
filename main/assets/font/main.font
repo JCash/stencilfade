@@ -1,0 +1,4 @@
+font: "/main/assets/font/prstartk.ttf"
+material: "/main/assets/font/bitmapfont.material"
+size: 16
+antialias: 0
